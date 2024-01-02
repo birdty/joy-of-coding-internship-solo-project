@@ -15,6 +15,7 @@ import { createIssueSchema } from "@/app/createIssueSchema";
 import { Text } from "@radix-ui/themes";
 import { z } from "zod";
 import ErrorMessage from "@/app/components/ErrorMessage";
+import Spinner from "@/app/components/spinner";
 
 type IssueForm = z.infer<typeof createIssueSchema>;
 
@@ -30,6 +31,7 @@ const IssuesPage = () => {
   /*  const { register, control } = useForm<IssueForm>(); */
   const router = useRouter();
   const [error, setError] = useState("");
+  const [isSubmitting, setSubmitting] = useState(false);
 
   return (
     <div className="max-w-xl">
@@ -42,9 +44,11 @@ const IssuesPage = () => {
         className="space-y-5"
         onSubmit={handleSubmit(async (data) => {
           try {
+            setSubmitting(true);
             await axios.post("/api/issues", data);
             router.push("/");
           } catch (error) {
+            setSubmitting(false);
             setError("An unexpected error occurred");
           }
         })}
@@ -53,7 +57,9 @@ const IssuesPage = () => {
           <TextField.Input placeholder="Name" {...register("name")} />
         </TextField.Root>
         <ErrorMessage>{errors.name?.message}</ErrorMessage>
-        <Button>Submit New Issue</Button>
+        <Button disabled={isSubmitting}>
+          Submit New Issue {isSubmitting && <Spinner />}
+        </Button>
       </form>
     </div>
   );
