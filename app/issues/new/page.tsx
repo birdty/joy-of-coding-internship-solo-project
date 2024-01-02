@@ -10,13 +10,22 @@ import "easymde/dist/easymde.min.css";
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Callout } from "@radix-ui/themes";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createIssueSchema } from "@/app/createIssueSchema";
+import { Text } from "@radix-ui/themes";
+import { z } from "zod";
 
-interface IssueForm {
-  name: string;
-}
+type IssueForm = z.infer<typeof createIssueSchema>;
 
 const IssuesPage = () => {
-  const { register, handleSubmit } = useForm<IssueForm>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IssueForm>({
+    resolver: zodResolver(createIssueSchema),
+  });
+
   /*  const { register, control } = useForm<IssueForm>(); */
   const router = useRouter();
   const [error, setError] = useState("");
@@ -42,6 +51,11 @@ const IssuesPage = () => {
         <TextField.Root>
           <TextField.Input placeholder="Name" {...register("name")} />
         </TextField.Root>
+        {errors.name && (
+          <Text color="red" as="p">
+            {errors.name.message}
+          </Text>
+        )}
         <Button>Submit New Issue</Button>
       </form>
     </div>
