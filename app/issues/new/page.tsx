@@ -14,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/app/createIssueSchema";
 import { Text } from "@radix-ui/themes";
 import { z } from "zod";
+import ErrorMessage from "@/app/components/ErrorMessage";
 
 type IssueForm = z.infer<typeof createIssueSchema>;
 
@@ -51,11 +52,7 @@ const IssuesPage = () => {
         <TextField.Root>
           <TextField.Input placeholder="Name" {...register("name")} />
         </TextField.Root>
-        {errors.name && (
-          <Text color="red" as="p">
-            {errors.name.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.name?.message}</ErrorMessage>
         <Button>Submit New Issue</Button>
       </form>
     </div>
