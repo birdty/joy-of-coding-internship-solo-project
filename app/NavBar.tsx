@@ -6,9 +6,9 @@ import { usePathname } from "next/navigation";
 import classnames from "classnames";
 
 const NavBar = () => {
-  const issues = [
+  const tasks = [
     { label: "Dashboard", href: "/" },
-    { label: "Issues", href: "/issues" },
+    { label: "Tasks", href: "/tasks" },
   ];
 
   const currentPath = usePathname();
@@ -19,17 +19,17 @@ const NavBar = () => {
         <AiFillBug />
       </Link>
       <ul className="flex space-x-6">
-        {issues.map((issue) => (
+        {tasks.map((task) => (
           <Link
-            key={issue.href}
-            href={issue.href}
+            key={task.href}
+            href={task.href}
             className={classnames({
-              "text-zinc-900": issue.href === currentPath,
-              "text-zinc-500": issue.href !== currentPath,
+              "text-zinc-900": task.href === currentPath,
+              "text-zinc-500": task.href !== currentPath,
               "hover:text-zinc-800 transition-colors": true,
             })}
           >
-            {issue.label}
+            {task.label}
           </Link>
         ))}
       </ul>

@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@radix-ui/themes";
@@ -11,13 +12,15 @@ import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Callout } from "@radix-ui/themes";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createIssueSchema } from "@/app/createIssueSchema";
+import { createTaskSchema } from "@/app/createTaskSchema";
 import { Text } from "@radix-ui/themes";
 import { z } from "zod";
 import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/spinner";
-
-type IssueForm = z.infer<typeof createIssueSchema>;
+import { AiFillDelete } from "react-icons/ai";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+type IssueForm = z.infer<typeof createTaskSchema>;
 
 const IssuesPage = () => {
   const {
@@ -25,24 +28,37 @@ const IssuesPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<IssueForm>({
-    resolver: zodResolver(createIssueSchema),
+    resolver: zodResolver(createTaskSchema),
   });
 
-  /*  const { register, control } = useForm<IssueForm>(); */
   const router = useRouter();
   const [error, setError] = useState("");
   const [isSubmitting, setSubmitting] = useState(false);
+  const searchParams = useSearchParams();
+  const [task, setTask] = useState({ name: "", taskId: 0 });
 
   const handeSubmitForm = handleSubmit(async (data) => {
     try {
       setSubmitting(true);
-      await axios.post("/api/issues", data);
-      router.push("/");
+      data.taskId = task.id;
+      await axios.post("/api/tasks", data);
+      router.push("/tasks");
     } catch (error) {
       setSubmitting(false);
       setError("An unexpected error occurred");
     }
   });
+
+  useEffect(() => {
+    axios
+      .get("/api/tasks?taskId=" + searchParams.get("taskId"))
+      .then(function (response) {
+        setTask(response.data.task);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <div className="max-w-xl">
@@ -51,9 +67,9 @@ const IssuesPage = () => {
           <Callout.Text>{error}</Callout.Text>
         </Callout.Root>
       )}
-      <form className="space-y-5" onSubmit={handeSubmitForm}>
+      <form className="space-y-5 p-5" onSubmit={handeSubmitForm}>
         <TextField.Root>
-          <TextField.Input placeholder="Name" {...register("name")} />
+          <TextField.Input {...register("name")} Value={task.name} />
         </TextField.Root>
         <ErrorMessage>{errors.name?.message}</ErrorMessage>
         <Button disabled={isSubmitting}>
@@ -65,8 +81,3 @@ const IssuesPage = () => {
 };
 
 export default IssuesPage;
-
-/*
-      <SimpleMDE />
-      <Controller name="test" control={control render={({field}) => <SimpleMDE {..field}/>}></Controller>
-*/
