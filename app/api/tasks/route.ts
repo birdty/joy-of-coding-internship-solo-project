@@ -13,29 +13,52 @@ async function POST(request: NextRequest) {
     let taskId = body.taskId;
 
     if(taskId) {
+
         const task = await prisma.task.update({
             select: {
                 name: true,
+                description: true,
+                duedate: true
             },
             where: {
                 id: taskId
             },
             data: {
-                name: body.name
+                name: body.name,
+                description: body.description,
+                duedate: body.duedate
             }
         });
 
         return NextResponse.json(task, {status: 201});    
     } else {
-        const newTask = await prisma.task.create({data: {name: body.name}});
+        const newTask = await prisma.task.create({data: {name: body.name, description: body.description}});
         return NextResponse.json(newTask, {status: 201});    
     }
 }
 
 async function GET(request: NextRequest){
     let taskId = request.nextUrl.searchParams.get('taskId');
+    let sortBy = request.nextUrl.searchParams.get('sortBy');
 
-    if(taskId) {
+    if(sortBy) {
+
+        let orderBy = {};
+        let tasks;
+
+        if(sortBy == 'name') {
+            orderBy = {
+                name: 'asc'
+            };
+        } else {
+            orderBy = {
+                name: 'desc'
+            };
+        }
+
+        tasks = await prisma.task.findMany({orderBy: [orderBy]});  
+        return NextResponse.json({tasks});
+    } else if(taskId) {
         const task = await prisma.task.findUnique({
             where: {
                 id: Number(taskId)

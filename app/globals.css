@@ -17,3 +17,7 @@
 body {
   color: rgb(var(--foreground-rgb));
 }
+
+.hand:hover {
+  cursor: pointer;
+}

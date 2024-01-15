@@ -55,6 +55,9 @@ const IssuesPage = () => {
         <TextField.Root>
           <TextField.Input placeholder="Name" {...register("name")} />
         </TextField.Root>
+        <TextField.Root>
+          <TextField.Input {...register("description")} />
+        </TextField.Root>
         <ErrorMessage>{errors.name?.message}</ErrorMessage>
         <Button disabled={isSubmitting}>
           Submit New Issue {isSubmitting && <Spinner />}
