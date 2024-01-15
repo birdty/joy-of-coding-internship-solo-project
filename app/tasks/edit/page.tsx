@@ -37,7 +37,12 @@ const IssuesPage = () => {
   const [error, setError] = useState("");
   const [isSubmitting, setSubmitting] = useState(false);
   const searchParams = useSearchParams();
-  const [task, setTask] = useState({ name: "", taskId: 0, description: "" });
+  const [task, setTask] = useState({
+    name: "",
+    taskId: 0,
+    description: "",
+    duedate: "",
+  });
 
   const [value, setValue] = useState({
     startDate: "2011-01-01",
@@ -53,6 +58,7 @@ const IssuesPage = () => {
     try {
       setSubmitting(true);
       data.taskId = task.id;
+      data.duedate = new Date(value.startDate);
       await axios.post("/api/tasks", data);
       router.push("/tasks");
     } catch (error) {
@@ -81,18 +87,29 @@ const IssuesPage = () => {
       )}
       <form className="space-y-5 p-5" onSubmit={handeSubmitForm}>
         <TextField.Root>
-          <TextField.Input {...register("name")} placeholder="Name" />
+          <TextField.Input
+            {...register("name")}
+            placeholder="Name"
+            defaultValue={task.name}
+          />
         </TextField.Root>
         <TextField.Root>
           <TextField.Input
             {...register("description")}
             placeholder="Description"
+            defaultValue={task.description}
           />
         </TextField.Root>
         <div>
           Due Date:
           <br />
-          <div></div>
+          <div>
+            <Datepicker
+              asSingle={true}
+              value={value}
+              onChange={handleValueChange}
+            />
+          </div>
         </div>
         <ErrorMessage>{errors.name?.message}</ErrorMessage>
         <Button disabled={isSubmitting} type="submit">

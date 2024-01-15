@@ -14,6 +14,8 @@ async function POST(request: NextRequest) {
 
     if(taskId) {
 
+        console.log(body.duedate);
+
         const task = await prisma.task.update({
             select: {
                 name: true,
@@ -24,7 +26,8 @@ async function POST(request: NextRequest) {
             },
             data: {
                 name: body.name,
-                description: body.description
+                description: body.description,
+                duedate: new Date(body.duedate)
             }
         });
 
