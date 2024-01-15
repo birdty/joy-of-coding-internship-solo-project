@@ -40,8 +40,8 @@ const IssuesPage = () => {
   const [task, setTask] = useState({ name: "", taskId: 0 });
 
   const [value, setValue] = useState({
-    startDate: null,
-    endDate: null,
+    startDate: "2011-01-01",
+    endDate: "2011-01-01",
   });
 
   const handleValueChange = (newValue) => {
