@@ -81,29 +81,18 @@ const IssuesPage = () => {
       )}
       <form className="space-y-5 p-5" onSubmit={handeSubmitForm}>
         <TextField.Root>
-          <TextField.Input
-            {...register("name")}
-            defaultValue={task.name}
-            placeholder="Name"
-          />
+          <TextField.Input {...register("name")} placeholder="Name" />
         </TextField.Root>
         <TextField.Root>
           <TextField.Input
             {...register("description")}
-            defaultValue={task.description}
             placeholder="Description"
           />
         </TextField.Root>
         <div>
           Due Date:
           <br />
-          <div>
-            <Datepicker
-              asSingle={true}
-              value={value}
-              onChange={handleValueChange}
-            />
-          </div>
+          <div></div>
         </div>
         <ErrorMessage>{errors.name?.message}</ErrorMessage>
         <Button disabled={isSubmitting} type="submit">
