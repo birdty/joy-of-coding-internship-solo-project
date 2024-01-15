@@ -17,16 +17,14 @@ async function POST(request: NextRequest) {
         const task = await prisma.task.update({
             select: {
                 name: true,
-                description: true,
-                duedate: true
+                description: true
             },
             where: {
                 id: taskId
             },
             data: {
                 name: body.name,
-                description: body.description,
-                duedate: body.duedate
+                description: body.description
             }
         });
 

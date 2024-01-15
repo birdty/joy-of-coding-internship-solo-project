@@ -37,7 +37,7 @@ const IssuesPage = () => {
   const [error, setError] = useState("");
   const [isSubmitting, setSubmitting] = useState(false);
   const searchParams = useSearchParams();
-  const [task, setTask] = useState({ name: "", taskId: 0 });
+  const [task, setTask] = useState({ name: "", taskId: 0, description: "" });
 
   const [value, setValue] = useState({
     startDate: "2011-01-01",
@@ -83,14 +83,14 @@ const IssuesPage = () => {
         <TextField.Root>
           <TextField.Input
             {...register("name")}
-            value={task.name}
+            defaultValue={task.name}
             placeholder="Name"
           />
         </TextField.Root>
         <TextField.Root>
           <TextField.Input
             {...register("description")}
-            value={task.description}
+            defaultValue={task.description}
             placeholder="Description"
           />
         </TextField.Root>
@@ -106,7 +106,7 @@ const IssuesPage = () => {
           </div>
         </div>
         <ErrorMessage>{errors.name?.message}</ErrorMessage>
-        <Button disabled={isSubmitting}>
+        <Button disabled={isSubmitting} type="submit">
           Submit New Issue {isSubmitting && <Spinner />}
         </Button>
       </form>
