@@ -44,13 +44,15 @@ const IssuesPage = () => {
     duedate: "",
   });
 
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+
   const [value, setValue] = useState({
     startDate: "2011-01-01",
     endDate: "2011-01-01",
   });
 
   const handleValueChange = (newValue) => {
-    console.log("newValue:", newValue);
     setValue(newValue);
   };
 
@@ -72,18 +74,13 @@ const IssuesPage = () => {
       .get("/api/tasks?taskId=" + searchParams.get("taskId"))
       .then(function (response) {
         setTask(response.data.task);
-        console.log(response.data.task.duedate);
 
         let parts = response.data.task.duedate.split("T");
-
         let date = new Date(parts[0]);
 
         // unsure why date of month is one numbe lower
         // for now just increment the day of month
         date.setDate(date.getDate() + 1);
-
-        console.log(parts[0]);
-        console.log(date);
 
         let dateParts = {
           startDate: date.toLocaleDateString(),
@@ -91,6 +88,8 @@ const IssuesPage = () => {
         };
 
         setValue(dateParts);
+        setName(response.data.task.name);
+        setDescription(response.data.task.description);
       })
       .catch(function (error) {
         console.log(error);
@@ -107,16 +106,20 @@ const IssuesPage = () => {
       <form className="space-y-5 p-5" onSubmit={handeSubmitForm}>
         <TextField.Root>
           <TextField.Input
+            size="3"
             {...register("name")}
             placeholder="Name"
-            defaultValue={task.name}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
         </TextField.Root>
         <TextField.Root>
           <TextField.Input
+            size="3"
             {...register("description")}
             placeholder="Description"
-            defaultValue={task.description}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </TextField.Root>
         <div>

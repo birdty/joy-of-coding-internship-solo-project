@@ -24,9 +24,6 @@ const IssuesPage = () => {
         tasks.forEach((task) => {
           // unsure why date of month is one number lower
           // for now just increment the day of month
-          //let date = new Date(task.duedate);
-          //date.setDate(date.getDate() + 1);
-          // task.duedate = date.toDateString();
           let date = new Date(task.duedate);
           date.setDate(date.getDate() + 1);
 
