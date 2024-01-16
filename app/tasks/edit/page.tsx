@@ -72,6 +72,25 @@ const IssuesPage = () => {
       .get("/api/tasks?taskId=" + searchParams.get("taskId"))
       .then(function (response) {
         setTask(response.data.task);
+        console.log(response.data.task.duedate);
+
+        let parts = response.data.task.duedate.split("T");
+
+        let date = new Date(parts[0]);
+
+        // unsure why date of month is one numbe lower
+        // for now just increment the day of month
+        date.setDate(date.getDate() + 1);
+
+        console.log(parts[0]);
+        console.log(date);
+
+        let dateParts = {
+          startDate: date.toLocaleDateString(),
+          endDate: date.toLocaleDateString(),
+        };
+
+        setValue(dateParts);
       })
       .catch(function (error) {
         console.log(error);
@@ -113,7 +132,7 @@ const IssuesPage = () => {
         </div>
         <ErrorMessage>{errors.name?.message}</ErrorMessage>
         <Button disabled={isSubmitting} type="submit">
-          Submit New Issue {isSubmitting && <Spinner />}
+          Save Task {isSubmitting && <Spinner />}
         </Button>
       </form>
     </div>

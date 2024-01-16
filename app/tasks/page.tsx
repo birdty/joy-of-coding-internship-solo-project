@@ -20,6 +20,19 @@ const IssuesPage = () => {
       .get("/api/tasks")
       .then(function (response) {
         let tasks = response.data.tasks;
+
+        tasks.forEach((task) => {
+          // unsure why date of month is one number lower
+          // for now just increment the day of month
+          //let date = new Date(task.duedate);
+          //date.setDate(date.getDate() + 1);
+          // task.duedate = date.toDateString();
+          let date = new Date(task.duedate);
+          date.setDate(date.getDate() + 1);
+
+          task.duedate = date.toLocaleDateString();
+        });
+
         setTasks(tasks);
       })
       .catch(function (error) {
@@ -85,7 +98,7 @@ const IssuesPage = () => {
             <th className="bg-blue-300 border text-left px-8 py-4">
               Description
             </th>
-            <th className="bg-blue-300 border text-left px-8 py-4">Duedate</th>
+            <th className="bg-blue-300 border text-left px-8 py-4">Due date</th>
             <th className="bg-blue-300 border text-left px-8 py-4">Edit</th>
           </tr>
         </thead>
