@@ -28,6 +28,7 @@ const IssuesPage = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<IssueForm>({
     resolver: zodResolver(createTaskSchema),
@@ -62,6 +63,7 @@ const IssuesPage = () => {
       data.taskId = task.id;
       data.duedate = new Date(value.startDate);
       await axios.post("/api/tasks", data);
+      reset();
       router.push("/tasks");
     } catch (error) {
       setSubmitting(false);
@@ -109,6 +111,7 @@ const IssuesPage = () => {
             size="3"
             {...register("name")}
             placeholder="Name"
+            id="one"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -118,6 +121,7 @@ const IssuesPage = () => {
             size="3"
             {...register("description")}
             placeholder="Description"
+            id="two"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
@@ -129,6 +133,7 @@ const IssuesPage = () => {
             <Datepicker
               asSingle={true}
               value={value}
+              id="three"
               onChange={handleValueChange}
             />
           </div>
